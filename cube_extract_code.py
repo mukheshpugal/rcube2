@@ -18,14 +18,14 @@ import os
 # In[2]:
 
 
-#6:black 0:white 1:blue 2:red 3:orange 4:green 5:yellow
+#6:black 0:white 1:orange 2:green 3:red 4:blue 5:yellow
 BLACK = (0,0,0)
 WHITE = (255,255,255)
-BLUE = (255,0,0)
-RED = (0,0,255)
-GREEN = (0,255,0)
-YELLOW = (0,255,255)
 ORANGE = (0,128,255)
+GREEN = (0,255,0)
+RED = (0,0,255)
+BLUE = (255,0,0)
+YELLOW = (0,255,255)
 
 
 # In[3]:
@@ -67,7 +67,7 @@ cwd = os.getcwd()
 # In[45]:
 
 
-class cubepre():
+class cube_extract():
     def __init__(self,imagelist):
         self.img = [None,None,None,None,None,None]
         self.grid = [None,None,None,None,None,None]
@@ -198,7 +198,7 @@ class cubepre():
         kmeans = KMeans(n_clusters=6)
         kmeans.fit(colours_list)
         colours = kmeans.cluster_centers_
-        Col = [WHITE,BLUE,RED,ORANGE,GREEN,YELLOW]
+        Col = [WHITE,ORANGE,GREEN,RED,BLUE,YELLOW]
         B = np.asarray(Col)[:,0]
         G = np.asarray(Col)[:,1]
         R = np.asarray(Col)[:,2]
@@ -262,16 +262,16 @@ class cubepre():
                     self.face[k][i,j] = WHITE
                     self.ccount[0] += 1
                 elif mat[i,j] == 1:
-                    self.face[k][i,j] = BLUE
+                    self.face[k][i,j] = ORANGE
                     self.ccount[1] += 1
                 elif mat[i,j] == 2:
-                    self.face[k][i,j] = RED
+                    self.face[k][i,j] = GREEN
                     self.ccount[2] += 1
                 elif mat[i,j] == 3:
-                    self.face[k][i,j] = ORANGE
+                    self.face[k][i,j] = RED
                     self.ccount[3] += 1
                 elif mat[i,j] == 4:
-                    self.face[k][i,j] = GREEN
+                    self.face[k][i,j] = BLUE
                     self.ccount[4] += 1
                 elif mat[i,j] == 5:
                     self.face[k][i,j] = YELLOW
@@ -289,7 +289,7 @@ face2 = cv2.imread(cwd+"/images/solved/image3.jpeg",1)
 face3 = cv2.imread(cwd+"/images/solved/image4.jpeg",1)
 face4 = cv2.imread(cwd+"/images/solved/image5.jpeg",1)
 face5 = cv2.imread(cwd+"/images/solved/image6.jpeg",1)
-cube = cubepre([face0,face1,face2,face3,face4,face5])
+cube = cube_extract([face0,face1,face2,face3,face4,face5])
 
 
 # In[62]:
