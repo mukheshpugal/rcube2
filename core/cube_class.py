@@ -18,42 +18,30 @@ class Cube(object):
 			raise Exception("orientation can either be clockwise or counterClockwise")
 
 		if side == "top":
-			for row in cube[0, :, :]:
-				for piece in row:
-					piece.rotate(orientation)(side)
 			cube[0, :, :] = np.rot90(cube[0, :, :], -1 if orientation=="clockwise" else 1)
 
 		if side == "right":
-			for row in cube[:, 0, :]:
-				for piece in row:
-					piece.rotate(orientation)(side)
 			cube[:, 0, :] = np.rot90(cube[:, 0, :], -1 if orientation=="clockwise" else 1)
 
 		if side == "front":
-			for row in cube[:, :, 0]:
-				for piece in row:
-					piece.rotate(orientation)(side)
 			cube[:, :, 0] = np.rot90(cube[:, :, 0], -1 if orientation=="clockwise" else 1)
 
 		if side == "bottom":
-			for row in cube[-1, :, :]:
-				for piece in row:
-					piece.rotate(orientation)(side)
 			cube[-1, :, :] = np.rot90(cube[-1, :, :], 1 if orientation=="clockwise" else -1)
 
 		if side == "left":
-			for row in cube[:, -1, :]:
-				for piece in row:
-					piece.rotate(orientation)(side)
 			cube[:, -1, :] = np.rot90(cube[:, -1, :], 1 if orientation=="clockwise" else -1)
 
 		if side == "back":
-			for row in cube[:, :, -1]:
+			cube[:, :, -1] = np.rot90(cube[:, :, -1], 1 if orientation=="clockwise" else -1)
+
+		try:
+			for row in self.slices[side]:
 				for piece in row:
 					piece.rotate(orientation)(side)
-			cube[:, :, -1] = np.rot90(cube[:, :, -1], 1 if orientation=="clockwise" else -1)
+		except KeyError:
+			pass
 
 	def getFace(self, side):
 		face = np.array([[piece.colorAt(side) for piece in row] for row in self.slices[side]])
 		return face
-		
