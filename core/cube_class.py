@@ -1,11 +1,59 @@
 import numpy as np
+from piece_class import Piece
 
 class Cube(object):
-	"""docstring for Cube"""
-	def __init__(self, arg):
-		self.arg = arg
-		self.mat = 
+	"""Cube contains methods for rotations"""
+	def __init__(self, faces):
+		self.cube = np.array([Piece() for i in range(27)]).reshape((3, 3, 3))
+		self.slices = {"top" : self.cube[0, :, :], "right" : self.cube[:, 0, :], "front" : self.cube[:, :, 0], "bottom" : self.cube[-1, :, :], "left" : self.cube[:, -1, :], "back" : self.cube[:, :, -1]}
+		for face in faces.keys():
+			for i in range(3):
+				for j in range(3):
+					slices[face][i, j].addFace(face, faces[face][i, j])
 
-	def clockwise(self, side):
+	def rotate(self, orientation, side):
+		cube = self.cube
 
+		if orientation not in ("clockwise", "counterClockwise"):
+			raise Exception("orientation can either be clockwise or counterClockwise")
 
+		if side == "top":
+			for row in cube[0, :, :]:
+				for piece in row:
+					piece.rotate(orientation)(side)
+			cube[0, :, :] = np.rot90(cube[0, :, :], -1 if orientation=="clockwise" else 1)
+
+		if side == "right":
+			for row in cube[:, 0, :]:
+				for piece in row:
+					piece.rotate(orientation)(side)
+			cube[:, 0, :] = np.rot90(cube[:, 0, :], -1 if orientation=="clockwise" else 1)
+
+		if side == "front":
+			for row in cube[:, :, 0]:
+				for piece in row:
+					piece.rotate(orientation)(side)
+			cube[:, :, 0] = np.rot90(cube[:, :, 0], -1 if orientation=="clockwise" else 1)
+
+		if side == "bottom":
+			for row in cube[-1, :, :]:
+				for piece in row:
+					piece.rotate(orientation)(side)
+			cube[-1, :, :] = np.rot90(cube[-1, :, :], 1 if orientation=="clockwise" else -1)
+
+		if side == "left":
+			for row in cube[:, -1, :]:
+				for piece in row:
+					piece.rotate(orientation)(side)
+			cube[:, -1, :] = np.rot90(cube[:, -1, :], 1 if orientation=="clockwise" else -1)
+
+		if side == "back":
+			for row in cube[:, :, -1]:
+				for piece in row:
+					piece.rotate(orientation)(side)
+			cube[:, :, -1] = np.rot90(cube[:, :, -1], 1 if orientation=="clockwise" else -1)
+
+	def getFace(self, side):
+		face = np.array([[piece.colorAt(side) for piece in row] for row in self.slices[side]])
+		return face
+		
