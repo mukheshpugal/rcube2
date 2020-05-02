@@ -71,7 +71,6 @@ class cube_extract():
     def __init__(self,imagelist):
         self.img = [None,None,None,None,None,None]
         self.grid = [None,None,None,None,None,None]
-        self.sq = [None,None,None,None,None,None]
         self.face = [None,None,None,None,None,None]
         self.stickers = [None,None,None,None,None,None]
         self.ccount = [0,0,0,0,0,0]
