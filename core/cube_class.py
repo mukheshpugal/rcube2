@@ -5,11 +5,17 @@ class Cube(object):
 	"""Cube contains methods for rotations"""
 	def __init__(self, faces):
 		self.cube = np.array([Piece() for i in range(27)]).reshape((3, 3, 3))
-		self.slices = {"top" : self.cube[0, :, :], "right" : self.cube[:, 0, :], "front" : self.cube[:, :, 0], "bottom" : self.cube[-1, :, :], "left" : self.cube[:, -1, :], "back" : self.cube[:, :, -1]}
+		self.slices = {"bottom" : (0, slice(None), slice(None)),\
+					 "right" : (slice(None), 0, slice(None)),\
+					 "front" : (slice(None), slice(None), 0),\
+					 "top" : (-1, slice(None), slice(None)),\
+					 "left" : (slice(None), -1, slice(None)),\
+					 "back" : (slice(None), slice(None), -1)}
+
 		for face in faces.keys():
 			for i in range(3):
 				for j in range(3):
-					self.slices[face][i, j].addFace(face, faces[face][i, j])
+					self.cube[self.slices[face]][i, j].addFace(face, faces[face][i, j])
 		for layer in self.cube:
 			for row in layer:
 				for piece in row:
@@ -21,33 +27,22 @@ class Cube(object):
 		if orientation not in ("clockwise", "counterClockwise"):
 			raise Exception("orientation can either be clockwise or counterClockwise")
 
-		if side == "top":
-			cube[0, :, :] = np.rot90(cube[0, :, :], -1 if orientation=="clockwise" else 1)
+		rotateDir = (orientation == "clockwise")
 
-		if side == "right":
-			cube[:, 0, :] = np.rot90(cube[:, 0, :], -1 if orientation=="clockwise" else 1)
+		if side in ("bottom", "left", "front"):
+			rotateDir = not rotateDir
 
-		if side == "front":
-			cube[:, :, 0] = np.rot90(cube[:, :, 0], -1 if orientation=="clockwise" else 1)
-
-		if side == "bottom":
-			cube[-1, :, :] = np.rot90(cube[-1, :, :], 1 if orientation=="clockwise" else -1)
-
-		if side == "left":
-			cube[:, -1, :] = np.rot90(cube[:, -1, :], 1 if orientation=="clockwise" else -1)
-
-		if side == "back":
-			cube[:, :, -1] = np.rot90(cube[:, :, -1], 1 if orientation=="clockwise" else -1)
+		cube[self.slices[side]] = np.rot90(cube[self.slices[side]], 1 if rotateDir else -1)
 
 		try:
-			for row in self.slices[side]:
+			for row in cube[self.slices[side]]:
 				for piece in row:
 					piece.rotate(orientation)(side)
 		except KeyError:
 			pass
 
-		return "rotated " + orientation + " " + side
+		return "rotated " + side + " " + orientation
 
 	def getFace(self, side):
-		face = np.array([[piece.colorAt(side) for piece in row] for row in self.slices[side]])
+		face = np.array([[piece.colorAt(side) for piece in row] for row in self.cube[self.slices[side]]])
 		return face
