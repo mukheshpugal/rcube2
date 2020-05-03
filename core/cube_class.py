@@ -46,6 +46,8 @@ class Cube(object):
 		except KeyError:
 			pass
 
+		return "rotated " + orientation + " " + side
+
 	def getFace(self, side):
 		face = np.array([[piece.colorAt(side) for piece in row] for row in self.slices[side]])
 		return face
