@@ -1,5 +1,4 @@
 import pygame
-import threading
 import sys
 from core.cube_class import Cube
 import numpy as np
@@ -7,11 +6,12 @@ import numpy as np
 pygame.init()
 window_name = '.'.join(sys.argv[0].split('.')[:-1])
 pygame.display.set_caption(window_name if window_name != '' else 'pygame')
-SCREEN = pygame.display.set_mode((600, 400))
+SCREEN = pygame.display.set_mode((600, 500))
 done = False
 clock = pygame.time.Clock()
 FRAME_RATE = 60
 FILL_CURRENT = (255, 255, 255)
+FONT = pygame.font.Font('fonts/Consola.ttf', 22)
 
 def background(a):
 	if not isinstance(a, tuple):
@@ -36,8 +36,8 @@ for i in range(6):
 cube = Cube(faces)
 colors = [(255, 255, 255), (255,255,0), (0,255,0), (0,0,255), (255,0,0), (255,128,0), (0, 0, 0)]
 
-background(0)
 def draw():
+	background(0)
 
 	for side in list(sides.keys()):
 		i = 0
@@ -66,33 +66,43 @@ def draw():
 			i += 1
 
 #----------------------------------------------------------------------
-def terminal():
+def interpreter(command):
+
 	global done
-	buff = ""
-	print("Commands to be in the format \"orientation, side\". \"exit\" to exit", end='')
-	while not done:
-		print(buff, end='')
-		command = input("\n>>> ")
 
-		if command == "exit":
-			done = True
-		else:
-			arguments = tuple(command.split(', '))
-			try:
-				buff = cube.rotate(*arguments)
-			except:
-				done = True
+	if command == "exit":
+		done = True
+	else:
+		arguments = tuple(command.split(', '))
+		try:
+			buff = cube.rotate(*arguments)
+		except:
+			print("Invalid command")
 
-try:
-   thread = threading.Thread(target=terminal)
-   thread.start()
-except:
-   print("Error: unable to start thread")
+buff = '>>> '
 
 while not done:
 	draw()
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			done = True
+		if event.type == pygame.KEYDOWN:
+			key = pygame.key.name(event.key)
+			if key == 'return':
+				interpreter(buff[4:])
+				buff = '>>> '
+			elif key == 'backspace':
+				if len(buff) > 4:
+					buff = buff[:-1]
+			elif key == 'space':
+				buff += ' '
+			elif len(key) == 1:
+				if event.mod and (pygame.KMOD_LSHIFT or pygame.KMOD_RSHIFT):
+					buff += key.upper()
+				else: buff += key
+
+	text = FONT.render(buff, True, (255, 255, 255))
+	SCREEN.blit(text, (10, 400))
+
 	pygame.display.flip()
 	clock.tick(FRAME_RATE)
