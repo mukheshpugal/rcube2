@@ -1,5 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
+import numpy as np
+import cv2
+from sklearn.cluster import KMeans
+import os
 
 #6:black 0:white 1:orange 2:green 3:red 4:blue 5:yellow
 BLACK = (0,0,0)
