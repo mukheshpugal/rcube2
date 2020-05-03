@@ -4,19 +4,19 @@ class Piece(object):
 		self.colors = {}
 
 	def addFace(self, side, color):
-		colors[side] = color
+		self.colors[side] = color
 
 	def fillNullFaces(self):
 		for side in ("top", "bottom", "front", "back", "right", "left"):
 			try:
-				colors[side] = colors[side]
+				self.colors[side] = self.colors[side]
 			except KeyError:
-				colors[side] = -1
+				self.colors[side] = -1
 
 	def rotate(self, orientation):
 		if orientation == "clockwise":
 			return self.clockwise
-		if orientation == "counterClockwise"
+		if orientation == "counterClockwise":
 			return self.counterClockwise
 
 	def clockwise(self, side):
@@ -62,5 +62,5 @@ class Piece(object):
 			self.clockwise("front")
 
 	def colorAt(self, side):
-		return color[side]
+		return self.colors[side]
 		

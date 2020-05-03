@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import cv2
+from sklearn import KMeans
+import os
+
 #6:black 0:white 1:orange 2:green 3:red 4:blue 5:yellow
 BLACK = (0,0,0)
 WHITE = (255,255,255)

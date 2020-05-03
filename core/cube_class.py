@@ -1,5 +1,5 @@
 import numpy as np
-from piece_class import Piece
+from .piece_class import Piece
 
 class Cube(object):
 	"""Cube contains methods for rotations"""
@@ -9,7 +9,11 @@ class Cube(object):
 		for face in faces.keys():
 			for i in range(3):
 				for j in range(3):
-					slices[face][i, j].addFace(face, faces[face][i, j])
+					self.slices[face][i, j].addFace(face, faces[face][i, j])
+		for layer in self.cube:
+			for row in layer:
+				for piece in row:
+					piece.fillNullFaces()
 
 	def rotate(self, orientation, side):
 		cube = self.cube
