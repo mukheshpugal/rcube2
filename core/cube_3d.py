@@ -36,7 +36,7 @@ class Cube3D(Cube):
 				for piece in row:
 					piece.setRotationMatrix(R)
 
-			positions[self.slices[self.rotatingSide]]
+			positions[self.slices[self.rotatingSide]] = np.array([[R @ location for location in row] for row in self.positions[self.slices[self.rotatingSide]]])
 
 		for i in range(3):
 			for j in range(3):
