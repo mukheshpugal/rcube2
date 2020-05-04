@@ -25,7 +25,7 @@ class Cube(object):
 		cube = self.cube
 
 		if orientation not in ("clockwise", "counterClockwise"):
-			raise Exception("orientation can either be clockwise or counterClockwise")
+			raise Exception("orientation can either be clockwise or counterClockwise"+orientation)
 
 		rotateDir = (orientation == "clockwise")
 

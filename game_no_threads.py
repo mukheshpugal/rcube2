@@ -11,7 +11,7 @@ done = False
 clock = pygame.time.Clock()
 FRAME_RATE = 60
 FILL_CURRENT = (255, 255, 255)
-FONT = pygame.font.Font('fonts/Consola.ttf', 22)
+#FONT = pygame.font.Font('fonts/Consola.ttf', 22)
 
 def background(a):
 	if not isinstance(a, tuple):
@@ -73,11 +73,13 @@ def interpreter(command):
 	if command == "exit":
 		done = True
 	else:
-		arguments = tuple(command.split(', '))
-		try:
-			buff = cube.rotate(*arguments)
-		except:
-			print("Invalid command")
+		arguments = tuple(command.split(','))
+		cube.rotate(*arguments)
+		"""try:
+			#buff = cube.rotate(*arguments)
+			cube.rotate('clockwise', 'right')
+		except Exception:
+			print("Invalid command")"""
 
 buff = '>>> '
 
@@ -88,21 +90,10 @@ while not done:
 			done = True
 		if event.type == pygame.KEYDOWN:
 			key = pygame.key.name(event.key)
-			if key == 'return':
-				interpreter(buff[4:])
-				buff = '>>> '
-			elif key == 'backspace':
-				if len(buff) > 4:
-					buff = buff[:-1]
-			elif key == 'space':
-				buff += ' '
-			elif len(key) == 1:
-				if event.mod and (pygame.KMOD_LSHIFT or pygame.KMOD_RSHIFT):
-					buff += key.upper()
-				else: buff += key
+			buff += key
 
-	text = FONT.render(buff, True, (255, 255, 255))
-	SCREEN.blit(text, (10, 400))
+#	text = FONT.render(buff, True, (255, 255, 255))
+#	SCREEN.blit(text, (10, 400))
 
 	pygame.display.flip()
 	clock.tick(FRAME_RATE)
