@@ -3,12 +3,13 @@ from .legacy_cube import Cube
 
 class Cube3D(Cube):
 	"""Cube class with the 3d functions"""
-	def __init__(self, faces)
+	def __init__(self, faces):
 		super().__init__(faces)
 		self.inRotation = False
 		self.rotatingSide = ""
 		self.rotatingOrientation = ""
 		self.positions = np.array([[[[-j, k, -i] for i in range(-1, 2)] for j in range(-1, 2)] for k in range(-1, 2)])
+		self.angle = 0
 
 	def render(self):
 		positions = self.positions.copy()
@@ -32,7 +33,7 @@ class Cube3D(Cube):
 			if side in ("front", "back"):
 				R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
 
-			for row in cube[self.slices[self.rotatingSide]]:
+			for row in self.cube[self.slices[self.rotatingSide]]:
 				for piece in row:
 					piece.setRotationMatrix(R)
 
@@ -41,10 +42,11 @@ class Cube3D(Cube):
 		for i in range(3):
 			for j in range(3):
 				for k in range(3):
-					self.cube[i, j, k].render(positions[i, j, k], 0.25, self.inRotation)
+					self.cube[i, j, k].render(positions[i, j, k], 0.5, self.inRotation)
 
 	def rotate3D(self, orientation, side):
-		if not inRotation:
+		if not self.inRotation:
+			print("Hi")
 			self.rotatingOrientation = orientation
 			self.rotatingSide = side
-			inRotation = True
+			self.inRotation = True

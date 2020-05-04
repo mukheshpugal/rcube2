@@ -1,6 +1,6 @@
 import pygame
 import sys
-from core.cube_class import Cube
+from core.legacy_cube import Cube
 import numpy as np
 
 pygame.init()

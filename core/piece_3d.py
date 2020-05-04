@@ -15,7 +15,7 @@ class Piece3D(Piece):
 		"front" : [0, 3, 4, 7],
 		"back" : [1, 2, 5, 6]
 		}
-		rotationMatrix = np.eye(3)
+		self.rotationMatrix = np.eye(3)
 
 	def render(self, location, scale, inRotation):
 		vertices = self.vertices.copy()
@@ -28,7 +28,6 @@ class Piece3D(Piece):
 			gl.glColor3fv(self.colors[key])
 			for vertex in face:
 				gl.glVertex3fv(scale * vertices[vertex] + location)
-			i += 1
 		gl.glEnd()
 
 	def setRotationMatrix(self, mat):
