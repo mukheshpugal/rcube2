@@ -1,16 +1,12 @@
 import numpy as np
-from .piece_class import Piece
+from .piece_3d import Piece3D
 
 class Cube(object):
 	"""Cube contains methods for rotations"""
 	def __init__(self, faces):
-		self.cube = np.array([Piece() for i in range(27)]).reshape((3, 3, 3))
-		self.slices = {"bottom" : (0, slice(None), slice(None)),\
-					 "right" : (slice(None), 0, slice(None)),\
-					 "front" : (slice(None), slice(None), 0),\
-					 "top" : (-1, slice(None), slice(None)),\
-					 "left" : (slice(None), -1, slice(None)),\
-					 "back" : (slice(None), slice(None), -1)}
+		self.cube = np.array([Piece3D() for i in range(27)]).reshape((3, 3, 3))
+		f = slice(None)
+		self.slices = {"bottom" : (0, f, f), "right" : (f, 0, f), "front" : (f, f, 0), "top" : (-1, f, f), "left" : (f, -1, f), "back" : (f, f, -1)}
 
 		for face in faces.keys():
 			for i in range(3):

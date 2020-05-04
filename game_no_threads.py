@@ -76,7 +76,7 @@ def interpreter(command):
 		arguments = tuple(command.split(', '))
 		try:
 			buff = cube.rotate(*arguments)
-		except:
+		except Exception:
 			print("Invalid command")
 
 buff = '>>> '

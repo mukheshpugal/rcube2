@@ -11,7 +11,7 @@ GREEN = (0,255,0)
 RED = (0,0,255)
 BLUE = (255,0,0)
 YELLOW = (0,255,255)
-   
+
 cwd = os.getcwd()
 
 class featureExtract(object):
