@@ -29,7 +29,7 @@ for i in range(6):
 cube3D = Cube(face_dict)
 new_faces = cube3D.returnAllFaces()
 
-cube_nodes = [(x,y,z) for x in range(-3,4,2) for z in range(-3,4,2) for y in range(3,-4,-2)]
+cube_nodes = [(x,y,z) for x in range(-3,4,2) for z in range(-3,4,2) for y in range(-3,4,2)]
 
 cube_frame = Wireframe()
 cube_frame.initNodeList(cube_nodes)

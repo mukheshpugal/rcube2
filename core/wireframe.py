@@ -38,17 +38,17 @@ class Wireframe:
                 front.append(i)
             if self.nodelist[i][2] == 3:
                 back.append(i)
+            if self.nodelist[i][0] == 3:
+                right.append(i)                
             if self.nodelist[i][0] == -3:
                 left.append(i)
-            if self.nodelist[i][0] == +3:
-                right.append(i)
                 
-        top = np.asarray(self.sortFace(top,0,2,False,False)).reshape(4,4)
-        bottom = np.asarray(self.sortFace(bottom,0,2,False,True)).reshape(4,4)
+        top = np.asarray(self.sortFace(top,0,2,False,True)).reshape(4,4)
+        bottom = np.asarray(self.sortFace(bottom,0,2,False,False)).reshape(4,4)
         front = np.asarray(self.sortFace(front,0,1,False,True)).reshape(4,4)
         back = np.asarray(self.sortFace(back,0,1,True,True)).reshape(4,4)
-        right = np.asarray(self.sortFace(right,2,1,True,True)).reshape(4,4)
-        left = np.asarray(self.sortFace(left,2,1,False,True)).reshape(4,4)
+        right = np.asarray(self.sortFace(right,2,1,False,True)).reshape(4,4)
+        left = np.asarray(self.sortFace(left,2,1,True,True)).reshape(4,4)
         
         self.com = [top,left,front,right,back,bottom]
         for k in range(len(faces)):
@@ -100,7 +100,6 @@ class Wireframe:
             self.nodelist.append(new_node)
             
     def updateFaces(self,faces):
-        self.edges = []
         self.surfaces = []
         for k in range(len(faces)):
             for i in range(3):

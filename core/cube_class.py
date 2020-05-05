@@ -47,22 +47,23 @@ class Cube(object):
     def getFace(self, side):
 		face = np.array([[piece.colorAt(side) for piece in row] for row in self.cube[self.slices[side]]])
 		if side == "top":
+			#face = np.flipud(face)
 			return np.rot90(face, 2)
 		elif side == "bottom":
-			return face[::-1]
+			return np.flipud(face)
 		elif side == "front":
 			face = np.rot90(face, 1)
-			return face[:, ::-1]
+			return np.fliplr(face)
 		elif side == "back":
 			return np.rot90(face, -1)
 		elif side == "right":
 			return np.rot90(face, -1)
 		elif side == "left":
 			face = np.rot90(face, 1)
-			return face[:, ::-1]
+			return np.fliplr(face)
 		else:
-			return face
-    
+			raise Exception("missing face")
+            
     def returnAllFaces(self):
         faces = []
         for side in self.slices.keys():

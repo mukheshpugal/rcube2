@@ -9,6 +9,7 @@ import pygame
 import numpy as np
 from .cube_class import Cube
 import collections
+import time
 
 pygame.init()
 
@@ -21,12 +22,12 @@ key_to_function = {
     pygame.K_UP:     (lambda x: x.transformall(x.rotateXMatrix(-15))),
     pygame.K_EQUALS: (lambda x: x.transformall(x.rotateZMatrix(+15))),
     pygame.K_MINUS:  (lambda x: x.transformall(x.rotateZMatrix(-15))),
-    pygame.K_r: (lambda x: x.clockwiseR()),
-    pygame.K_l: (lambda x: x.clockwiseL()),
-    pygame.K_u: (lambda x: x.clockwiseU()),
-    pygame.K_f: (lambda x: x.clockwiseF()),
-    pygame.K_b: (lambda x: x.clockwiseB()),
-    pygame.K_d: (lambda x: x.clockwiseD()),}
+    pygame.K_r: (lambda x: x.rotateR()),
+    pygame.K_l: (lambda x: x.rotateL()),
+    pygame.K_u: (lambda x: x.rotateU()),
+    pygame.K_f: (lambda x: x.rotateF()),
+    pygame.K_b: (lambda x: x.rotateB()),
+    pygame.K_d: (lambda x: x.rotateD()),}
 
 class cubeProjection:
 #Displays 3D objects on a Pygame screen
@@ -82,31 +83,61 @@ class cubeProjection:
         return np.array([[c,-s, 0],
                          [s, c, 0],
                          [0, 0, 1]])
-
-    def scaleMatrix(self,sx=0, sy=0, sz=0):
-    # Return matrix for scaling equally along all axes centred on the point (cx,cy,cz). """        
-        return np.array([[sx, 0,  0],
-                         [0,  sy, 0],
-                         [0,  0,  sz]])
     
-    def clockwiseR(self):
+    def rotateR(self):
+        t = time.time()
+        while (time.time() - t)<0.5:
+           for event in pygame.event.get():
+               if event.key == pygame.K_i:
+                   self.cube3D.rotate("counterClockwise","right")
+                   break        
         self.cube3D.rotate("clockwise","right")
 
-    def clockwiseL(self):
+    def rotateL(self):
+        t = time.time()
+        while (time.time() - t)<0.5:
+           for event in pygame.event.get():
+               if event.key == pygame.K_i:
+                   self.cube3D.rotate("counterClockwise","left")
+                   break
         self.cube3D.rotate("clockwise","left")
-
-    def clockwiseU(self):
+        
+    def rotateU(self):
+        t = time.time()
+        while (time.time() - t)<0.5:
+           for event in pygame.event.get():
+               if event.key == pygame.K_i:
+                   self.cube3D.rotate("counterClockwise","top")
+                   break        
         self.cube3D.rotate("clockwise","top")
 
-    def clockwiseF(self):
-        self.cube3D.rotate("counterClockwise","back")
-
-    def clockwiseB(self):
-        self.cube3D.rotate("counterClockwise","front")
-
-    def clockwiseD(self):
-        self.cube3D.rotate("clockwise","bottom")
-                                 
+    def rotateD(self):
+        t = time.time()
+        while (time.time() - t)<0.5:
+           for event in pygame.event.get():
+               if event.key == pygame.K_i:
+                   self.cube3D.rotate("counterClockwise","bottom")
+                   break        
+        self.cube3D.rotate("clockwise","bottom")  
+        
+    def rotateF(self):
+        t = time.time()
+        while (time.time() - t)<0.5:
+           for event in pygame.event.get():
+               if event.key == pygame.K_i:
+                   self.cube3D.rotate("counterClockwise","front")
+                   break        
+        self.cube3D.rotate("clockwise","front")
+        
+    def rotateB(self):
+        t = time.time()
+        while (time.time() - t)<0.5:
+           for event in pygame.event.get():
+               if event.key == pygame.K_i:
+                   self.cube3D.rotate("counterClockwise","back")
+                   break        
+        self.cube3D.rotate("clockwise","back")
+                                      
     def project(self,points):
         new = []
         for pt in points:
