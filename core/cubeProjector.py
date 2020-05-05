@@ -86,7 +86,7 @@ class cubeProjection:
     
     def rotateR(self):
         t = time.time()
-        while (time.time() - t)<0.5:
+        while (time.time() - t)<0.3:
            for event in pygame.event.get():
                if event.key == pygame.K_i:
                    self.cube3D.rotate("counterClockwise","right")
@@ -95,7 +95,7 @@ class cubeProjection:
 
     def rotateL(self):
         t = time.time()
-        while (time.time() - t)<0.5:
+        while (time.time() - t)<0.3:
            for event in pygame.event.get():
                if event.key == pygame.K_i:
                    self.cube3D.rotate("counterClockwise","left")
@@ -104,7 +104,7 @@ class cubeProjection:
         
     def rotateU(self):
         t = time.time()
-        while (time.time() - t)<0.5:
+        while (time.time() - t)<0.3:
            for event in pygame.event.get():
                if event.key == pygame.K_i:
                    self.cube3D.rotate("counterClockwise","top")
@@ -113,7 +113,7 @@ class cubeProjection:
 
     def rotateD(self):
         t = time.time()
-        while (time.time() - t)<0.5:
+        while (time.time() - t)<0.3:
            for event in pygame.event.get():
                if event.key == pygame.K_i:
                    self.cube3D.rotate("counterClockwise","bottom")
@@ -122,7 +122,7 @@ class cubeProjection:
         
     def rotateF(self):
         t = time.time()
-        while (time.time() - t)<0.5:
+        while (time.time() - t)<0.3:
            for event in pygame.event.get():
                if event.key == pygame.K_i:
                    self.cube3D.rotate("counterClockwise","front")
@@ -131,7 +131,7 @@ class cubeProjection:
         
     def rotateB(self):
         t = time.time()
-        while (time.time() - t)<0.5:
+        while (time.time() - t)<0.3:
            for event in pygame.event.get():
                if event.key == pygame.K_i:
                    self.cube3D.rotate("counterClockwise","back")
@@ -165,7 +165,8 @@ class cubeProjection:
                     surf[:4] = self.project(surf[:4])
                     bound = [tuple(surf[0])[:2],tuple(surf[1])[:2],tuple(surf[2])[:2],tuple(surf[3])[:2]]
                     pygame.draw.polygon(self.screen,colors[int(surf[4])],bound)                
-                
+                    pygame.draw.polygon(self.screen,(0,0,0),bound,1) 
+
     def transformall(self,matrix):
         """ Rotate all wireframe about their centre, along a given axis by a given angle. """
         for wireframe in self.wireframes.itervalues():
