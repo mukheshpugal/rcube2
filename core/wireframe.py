@@ -7,7 +7,6 @@ Created on Sun May  3 17:43:20 2020
 """
 import pygame as pg
 import numpy as np
-import math
 
 pg.init()
 faces = [np.ones((3,3),np.uint8)for i in range(6)]
@@ -15,11 +14,10 @@ faces = [np.ones((3,3),np.uint8)for i in range(6)]
 class Wireframe:
     def __init__(self):
         self.nodes = np.zeros((0,3))
-        self.edges = []
         self.surfaces = []
         self.nodelist = []
         self.faces = []
-        
+
     def initNodeList(self,nodeList):
         self.nodelist += nodeList
     
@@ -32,28 +30,27 @@ class Wireframe:
         right = []
         left = []
         for i in range(len(self.nodelist)):
-            if self.nodelist[i][2] == 3:
-                top.append(i) 
-            if self.nodelist[i][2] == -3:
-                bottom.append(i)
-            if self.nodelist[i][1] == -3:
-                front.append(i)
             if self.nodelist[i][1] == 3:
+                top.append(i) 
+            if self.nodelist[i][1] == -3:
+                bottom.append(i)
+            if self.nodelist[i][2] == -3:
+                front.append(i)
+            if self.nodelist[i][2] == 3:
                 back.append(i)
             if self.nodelist[i][0] == -3:
                 left.append(i)
-            if self.nodelist[i][0] == 3:
+            if self.nodelist[i][0] == +3:
                 right.append(i)
                 
-        top = np.asarray(self.sortFace(top,0,1,False,True)).reshape(4,4)
-        bottom = np.asarray(self.sortFace(bottom,0,1,True,False)).reshape(4,4)
-        front = np.asarray(self.sortFace(front,0,2,False,True)).reshape(4,4)
-        back = np.asarray(self.sortFace(back,0,2,True,True)).reshape(4,4)
-        right = np.asarray(self.sortFace(right,1,2,False,True)).reshape(4,4)
-        left = np.asarray(self.sortFace(left,1,2,True,True)).reshape(4,4)
+        top = np.asarray(self.sortFace(top,0,2,False,False)).reshape(4,4)
+        bottom = np.asarray(self.sortFace(bottom,0,2,False,True)).reshape(4,4)
+        front = np.asarray(self.sortFace(front,0,1,False,True)).reshape(4,4)
+        back = np.asarray(self.sortFace(back,0,1,True,True)).reshape(4,4)
+        right = np.asarray(self.sortFace(right,2,1,True,True)).reshape(4,4)
+        left = np.asarray(self.sortFace(left,2,1,False,True)).reshape(4,4)
         
         self.com = [top,left,front,right,back,bottom]
-        self.addEdges([(i,j) for i in range(len(self.nodelist)) for j in range(len(self.nodelist)) if j<i])
         for k in range(len(faces)):
             for i in range(3):
                 for j in range(3):            
@@ -68,9 +65,6 @@ class Wireframe:
             new[0:len(self.nodes),0:3] = self.nodes
             new[len(self.nodes):,0:3] = node_array
             self.nodes = new
-
-    def addEdges(self, edgeList):
-        self.edges += edgeList
     
     def addSurfaces(self,surface):
         self.surfaces.append(surface)    
@@ -105,14 +99,13 @@ class Wireframe:
         for new_node in self.nodes:
             self.nodelist.append(new_node)
             
-    def updateFaces(self):
+    def updateFaces(self,faces):
         self.edges = []
-        self.addEdges([(i,j) for i in range(len(self.nodelist)) for j in range(len(self.nodelist)) if j<i])
         self.surfaces = []
-        for k in range(len(self.faces)):
+        for k in range(len(faces)):
             for i in range(3):
                 for j in range(3):            
-                    self.addSurfaces([self.nodelist[self.com[k][i][j]],self.nodelist[self.com[k][i][j+1]],self.nodelist[self.com[k][i+1][j+1]],self.nodelist[self.com[k][i+1][j]],self.faces[k][i][j]])
+                    self.addSurfaces([self.nodelist[self.com[k][i][j]],self.nodelist[self.com[k][i][j+1]],self.nodelist[self.com[k][i+1][j+1]],self.nodelist[self.com[k][i+1][j]],faces[k][i][j]])
     
     
 

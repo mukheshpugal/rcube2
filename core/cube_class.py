@@ -1,16 +1,17 @@
 import numpy as np
 from .piece_class import Piece
+import collections
 
 class Cube(object):
-	"""Cube contains methods for rotations"""
-	def __init__(self, faces):
+#"""Cube contains methods for rotations"""
+    def __init__(self, faces):
 		self.cube = np.array([Piece() for i in range(27)]).reshape((3, 3, 3))
-		self.slices = {"bottom" : (0, slice(None), slice(None)),\
-					 "right" : (slice(None), 0, slice(None)),\
-					 "front" : (slice(None), slice(None), 0),\
-					 "top" : (-1, slice(None), slice(None)),\
-					 "left" : (slice(None), -1, slice(None)),\
-					 "back" : (slice(None), slice(None), -1)}
+		self.slices = collections.OrderedDict([("top",(-1, slice(None), slice(None))),\
+                                               ("left",(slice(None), -1, slice(None))),\
+                                               ("front",(slice(None), slice(None), 0)),\
+                                               ("right",(slice(None), 0, slice(None))),\
+                                               ("back",(slice(None), slice(None), -1)),\
+                                               ("bottom",(0, slice(None), slice(None)))])
 
 		for face in faces.keys():
 			for i in range(3):
@@ -21,11 +22,11 @@ class Cube(object):
 				for piece in row:
 					piece.fillNullFaces()
 
-	def rotate(self, orientation, side):
+    def rotate(self, orientation, side):
 		cube = self.cube
 
 		if orientation not in ("clockwise", "counterClockwise"):
-			raise Exception("orientation can either be clockwise or counterClockwise"+orientation)
+			raise Exception("orientation can either be clockwise or counterClockwise")
 
 		rotateDir = (orientation == "clockwise")
 
@@ -42,7 +43,30 @@ class Cube(object):
 			pass
 
 		return "rotated " + side + " " + orientation
-
-	def getFace(self, side):
+       
+    def getFace(self, side):
 		face = np.array([[piece.colorAt(side) for piece in row] for row in self.cube[self.slices[side]]])
-		return face
+		if side == "top":
+			return np.rot90(face, 2)
+		elif side == "bottom":
+			return face[::-1]
+		elif side == "front":
+			face = np.rot90(face, 1)
+			return face[:, ::-1]
+		elif side == "back":
+			return np.rot90(face, -1)
+		elif side == "right":
+			return np.rot90(face, -1)
+		elif side == "left":
+			face = np.rot90(face, 1)
+			return face[:, ::-1]
+		else:
+			return face
+    
+    def returnAllFaces(self):
+        faces = []
+        for side in self.slices.keys():
+            face = np.uint8(self.getFace(side))
+            faces.append(face)
+        return faces
+        

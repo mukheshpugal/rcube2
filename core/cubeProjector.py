@@ -5,21 +5,28 @@ Created on Sun May  3 18:40:28 2020
 
 @author: srivenkat
 """
-from .wireframe import Wireframe
 import pygame
 import numpy as np
-from operator import itemgetter
+from .cube_class import Cube
+import collections
+
 pygame.init()
 
-colors = [(255, 255, 255), (255,255,0), (0,255,0), (0,0,255), (255,0,0), (255,128,0), (0, 0, 0)]
+colors = [(255, 255, 255), (255,128,0), (0,255,0), (255,0,0), (0,0,255), (255,255,0), (0, 0, 0)]
 
 key_to_function = {
-    pygame.K_LEFT:   (lambda x: x.transformall(x.rotateXMatrix(15))),
-    pygame.K_RIGHT:  (lambda x: x.transformall(x.rotateXMatrix(-15))),
-    pygame.K_DOWN:   (lambda x: x.transformall(x.rotateYMatrix(15))),
-    pygame.K_UP:     (lambda x: x.transformall(x.rotateYMatrix(-15))),
-    pygame.K_EQUALS: (lambda x: x.transformall(x.rotateZMatrix(15))),
-    pygame.K_MINUS:  (lambda x: x.transformall(x.rotateZMatrix(-15)))}
+    pygame.K_LEFT:   (lambda x: x.transformall(x.rotateYMatrix(-15))),
+    pygame.K_RIGHT:  (lambda x: x.transformall(x.rotateYMatrix(15))),
+    pygame.K_DOWN:   (lambda x: x.transformall(x.rotateXMatrix(+15))),
+    pygame.K_UP:     (lambda x: x.transformall(x.rotateXMatrix(-15))),
+    pygame.K_EQUALS: (lambda x: x.transformall(x.rotateZMatrix(+15))),
+    pygame.K_MINUS:  (lambda x: x.transformall(x.rotateZMatrix(-15))),
+    pygame.K_r: (lambda x: x.clockwiseR()),
+    pygame.K_l: (lambda x: x.clockwiseL()),
+    pygame.K_u: (lambda x: x.clockwiseU()),
+    pygame.K_f: (lambda x: x.clockwiseF()),
+    pygame.K_b: (lambda x: x.clockwiseB()),
+    pygame.K_d: (lambda x: x.clockwiseD()),}
 
 class cubeProjection:
 #Displays 3D objects on a Pygame screen
@@ -31,14 +38,23 @@ class cubeProjection:
         self.background = (10,10,50)
         self.wireframes = {}
         self.displayNodes = True
-        self.displayEdges = False
         self.displayColors = True
         self.nodeColour = (255,255,255)
         self.edgeColour = (200,200,200)
         self.nodeRadius = 4
+        self.cube3D = None
         
     def addWireframe(self,name,frame):
         self.wireframes[name] = frame
+        self.define3Dcube()
+    
+    def define3Dcube(self):
+        for wf in self.wireframes.itervalues():
+            faces = wf.faces
+            face_dict = collections.OrderedDict([("top",None), ("left",None), ("front",None), ("right",None), ("back",None), ("bottom",None)])
+            for i in range(6):
+                face_dict[list(face_dict.keys())[i]] = faces[i]
+            self.cube3D = Cube(face_dict)
 
     def rotateXMatrix(self,deg):
     # Return matrix for rotating about the x-axis by 'radians' radians
@@ -72,11 +88,29 @@ class cubeProjection:
         return np.array([[sx, 0,  0],
                          [0,  sy, 0],
                          [0,  0,  sz]])
+    
+    def clockwiseR(self):
+        self.cube3D.rotate("clockwise","right")
 
+    def clockwiseL(self):
+        self.cube3D.rotate("clockwise","left")
+
+    def clockwiseU(self):
+        self.cube3D.rotate("clockwise","top")
+
+    def clockwiseF(self):
+        self.cube3D.rotate("counterClockwise","back")
+
+    def clockwiseB(self):
+        self.cube3D.rotate("counterClockwise","front")
+
+    def clockwiseD(self):
+        self.cube3D.rotate("clockwise","bottom")
+                                 
     def project(self,points):
         new = []
         for pt in points:
-            factor = 500 / (15 + pt[2])
+            factor = 1000 / (20 + pt[2])
             x = (pt[0])*factor + self.width/2
             y = -(pt[1])*factor + self.height/2
             new.append([x,y,pt[2]])
@@ -86,20 +120,16 @@ class cubeProjection:
         """ Draw the wireframes on the screen. """
         self.screen.fill(self.background)
         for wireframe in self.wireframes.values():
-            if self.displayEdges:
-                for n1,n2 in wireframe.edges:
-                    pygame.draw.aaline(self.screen, self.edgeColour, wireframe.nodes[n1][:2], wireframe.nodes[n2][:2], 1)
             if self.displayNodes:
                 for node in wireframe.nodes:
                     pygame.draw.circle(self.screen, self.nodeColour, (int(node[0]), int(node[1])), self.nodeRadius, 0)
             if self.displayColors:
                 avg_z = []
-                #i = 0
                 for i in range(len(wireframe.surfaces)):
                     item = wireframe.surfaces[i]
                     mean = (item[0][2] +item[1][2] +item[2][2] +item[3][2])/4.0
                     avg_z.append((mean,i))
-                for temp in sorted(avg_z,key=itemgetter(1),reverse=True):
+                for temp in sorted(avg_z,key=lambda b:b[0],reverse=True):
                     surf = wireframe.surfaces[int(temp[1])]
                     surf[:4] = self.project(surf[:4])
                     bound = [tuple(surf[0])[:2],tuple(surf[1])[:2],tuple(surf[2])[:2],tuple(surf[3])[:2]]
@@ -111,8 +141,9 @@ class cubeProjection:
             wireframe.transform(matrix)
             
     def updateall(self):
+        facelist = self.cube3D.returnAllFaces()
         for wireframe in self.wireframes.itervalues():
-            wireframe.updateFaces()
+            wireframe.updateFaces(facelist)
             
     def run(self):
         running = True
