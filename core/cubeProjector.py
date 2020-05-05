@@ -165,7 +165,7 @@ class cubeProjection:
                     surf[:4] = self.project(surf[:4])
                     bound = [tuple(surf[0])[:2],tuple(surf[1])[:2],tuple(surf[2])[:2],tuple(surf[3])[:2]]
                     pygame.draw.polygon(self.screen,colors[int(surf[4])],bound)                
-                    pygame.draw.polygon(self.screen,(0,0,0),bound,1) 
+                    pygame.draw.polygon(self.screen,(0,0,0),bound,3) 
 
     def transformall(self,matrix):
         """ Rotate all wireframe about their centre, along a given axis by a given angle. """
