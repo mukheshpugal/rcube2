@@ -58,10 +58,10 @@ def movie():
 def terminal():
 	global done
 	buff = ""
-	print("Commands to be in the format \"orientation, side\". \"exit\" to exit")
+	print("Commands to be in the format \"orientation, side\". \"exit\" to exit", end = '')
 	while not done:
 		print(buff)
-		command = input("\n>>> ")
+		command = input("\n>>> ", end = '')
 
 		if command == "exit":
 			done = True
