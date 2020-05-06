@@ -50,7 +50,7 @@ class cubeProjection:
         self.define3Dcube()
     
     def define3Dcube(self):
-        for wf in self.wireframes.itervalues():
+        for wf in self.wireframes.values():
             faces = wf.faces
             face_dict = collections.OrderedDict([("top",None), ("left",None), ("front",None), ("right",None), ("back",None), ("bottom",None)])
             for i in range(6):
@@ -169,12 +169,12 @@ class cubeProjection:
 
     def transformall(self,matrix):
         """ Rotate all wireframe about their centre, along a given axis by a given angle. """
-        for wireframe in self.wireframes.itervalues():
+        for wireframe in self.wireframes.values():
             wireframe.transform(matrix)
             
     def updateall(self):
         facelist = self.cube3D.returnAllFaces()
-        for wireframe in self.wireframes.itervalues():
+        for wireframe in self.wireframes.values():
             wireframe.updateFaces(facelist)
             
     def run(self):
