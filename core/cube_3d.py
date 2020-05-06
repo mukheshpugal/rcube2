@@ -45,7 +45,6 @@ class Cube3D(Cube):
 
 	def rotate3D(self, orientation, side):
 		if not self.inRotation:
-			print("Hi")
 			self.rotatingOrientation = orientation
 			self.rotatingSide = side
 			self.inRotation = True
