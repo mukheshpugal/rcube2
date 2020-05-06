@@ -7,7 +7,7 @@ Created on Sun May  3 18:40:28 2020
 """
 import pygame
 import numpy as np
-from .cube_class import Cube
+from .legacy_cube import Cube
 import collections
 import time
 

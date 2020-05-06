@@ -5,7 +5,7 @@ Created on Sun May  3 23:55:09 2020
 
 @author: srivenkat
 """
-from core.cube_class import Cube
+from core.legacy_cube import Cube
 from core.cubeProjector import cubeProjection
 from core.wireframe import Wireframe
 import numpy as np

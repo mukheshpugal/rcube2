@@ -1,13 +1,13 @@
 import numpy as np
 from .piece_3d import Piece3D
+import collections
 
 class Cube(object):
 	"""Cube contains methods for rotations"""
 	def __init__(self, faces):
 		self.cube = np.array([Piece3D() for i in range(27)]).reshape((3, 3, 3))
 		f = slice(None)
-		self.slices = {"bottom" : (0, f, f), "right" : (f, 0, f), "front" : (f, f, 0), "top" : (-1, f, f), "left" : (f, -1, f), "back" : (f, f, -1)}
-
+		self.slices = collections.OrderedDict([("top",(-1, f, f)),("left",(f, -1, f)),("front",(f, f, 0)),("right",(f, 0, f)),("back",(f, f, -1)),("bottom",(0, f, f))])
 		for face in faces.keys():
 			for i in range(3):
 				for j in range(3):
@@ -41,4 +41,27 @@ class Cube(object):
 
 	def getFace(self, side):
 		face = np.array([[piece.colorAt(side) for piece in row] for row in self.cube[self.slices[side]]])
-		return face
+		if side == "top":
+			#face = np.flipud(face)
+			return np.rot90(face, 2)
+		elif side == "bottom":
+			return np.flipud(face)
+		elif side == "front":
+			face = np.rot90(face, 1)
+			return np.fliplr(face)
+		elif side == "back":
+			return np.rot90(face, -1)
+		elif side == "right":
+			return np.rot90(face, -1)
+		elif side == "left":
+			face = np.rot90(face, 1)
+			return np.fliplr(face)
+		else:
+			raise Exception("missing face")
+            
+	def returnAllFaces(self):
+		faces = []
+		for side in self.slices.keys():
+			face = np.uint8(self.getFace(side))
+			faces.append(face)
+		return faces
